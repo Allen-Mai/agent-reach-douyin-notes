@@ -1,0 +1,14 @@
+# 统一行尾，避免跨平台协作时 diff 噪音
+* text=auto
+
+# PowerShell 脚本在 Windows 上使用 CRLF
+*.ps1 text eol=crlf
+
+# Markdown / JSON 使用 LF
+*.md text eol=lf
+*.json text eol=lf
+
+# 二进制文件不要做行尾转换
+*.mp4 binary
+*.png binary
+*.jpg binary

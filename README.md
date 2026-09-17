@@ -137,6 +137,27 @@ curl <直链> --referer https://www.douyin.com/   # 下载
 2. **视频用 MSE blob**（`video.src` 是 `blob:https://...`），所以读 `<video>` 标签拿不到东西，必须从网络请求里抓分片地址。
 3. **下载必须带 `Referer: https://www.douyin.com/`**，否则 CDN 拒绝（防盗链）。
 
+### 工具依赖
+
+真正不可替代的只有 **OpenCLI**，其余都是通用工具。完整清单见 [`tools/README.md`](tools/README.md)。
+
+| 工具 | 版本（实测） | 必需性 | 作用 |
+|---|---|---|---|
+| **OpenCLI** | 1.8.7 | **必需** | 浏览器自动化层，绕过 cookie 加密 |
+| └ 浏览器扩展 | 1.0.24 | **必需** | 必须手动安装 |
+| Node.js | v26.7.0 (18+) | **必需** | OpenCLI 运行时 |
+| curl | 8.21.0 | **必需** | 下载分片（Win10+ 自带） |
+| ffmpeg / ffprobe | 9.0.1 | 可选 | 校验分辨率时长、音频提取 |
+
+**一键还原**：
+
+```powershell
+.\tools\install-tools.ps1              # 安装可自动化的部分并验证
+.\tools\install-tools.ps1 -SkipFfmpeg  # 不需要校验工具
+```
+
+> 浏览器扩展那一步无法自动化（浏览器安全模型限制），脚本会输出指引。
+
 ---
 
 ## 快速开始
@@ -144,10 +165,14 @@ curl <直链> --referer https://www.douyin.com/   # 下载
 ### 前置条件
 
 ```powershell
+# 0. 一键安装工具链（推荐）
+.\tools\install-tools.ps1
+
+# 或者手动：
 # 1. 安装 OpenCLI
 npm install -g opencli
 
-# 2. 安装浏览器扩展（Edge 可从 Chrome 商店安装）
+# 2. 安装浏览器扩展（Edge 也可从 Chrome 商店安装）
 #    https://chromewebstore.google.com/detail/opencli/ildkmabpimmkaediidaifkhjpohdnifk
 
 # 3. 验证连接 —— 应显示 Extension: connected
@@ -362,9 +387,26 @@ ffprobe 输出：
 
 ## 参考
 
-- [Agent Reach](https://github.com/Panniantong/agent-reach) —— 本次安装的基础设施
-- [OpenCLI](https://github.com/jackwener/OpenCLI) —— 浏览器自动化层
+### 本项目用到的工具
+
+- [OpenCLI](https://github.com/jackwener/OpenCLI) —— **核心**，浏览器自动化层（[扩展商店](https://chromewebstore.google.com/detail/opencli/ildkmabpimmkaediidaifkhjpohdnifk)）
+- [Node.js](https://nodejs.org) —— OpenCLI 运行时
+- [curl](https://curl.se) —— 下载视频分片
+- [FFmpeg](https://ffmpeg.org) —— 校验下载结果（可选）
+
+完整清单、版本与安装方式见 [`tools/README.md`](tools/README.md)。
+
+### 相关项目与背景
+
+- [Agent Reach](https://github.com/Panniantong/agent-reach) —— 本次环境搭建用的基础设施（顺带装上了 OpenCLI、yt-dlp；**它本身不支持抖音**）
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp) —— 视频下载工具（本文记录了其抖音提取器当前失效的情况）
+
+### 相关 issue
+
+- [#16831 — Unable to download videos from Douyin](https://github.com/yt-dlp/yt-dlp/issues/16831)
+- [#16867 — Fresh cookies issue with valid cookies on nightly](https://github.com/yt-dlp/yt-dlp/issues/16867)
+- [#10927 — Failed to decrypt with DPAPI](https://github.com/yt-dlp/yt-dlp/issues/10927)
+- [#17464 — Douyin extractor is currently unable to download videos](https://github.com/yt-dlp/yt-dlp/issues/17464)
 
 ## License
 
