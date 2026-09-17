@@ -1,0 +1,13 @@
+# 下载产物
+*.mp4
+*.mp3
+*.webm
+
+# 临时文件
+net.json
+*.part
+*.log
+
+# 编辑器
+.vscode/
+.idea/
